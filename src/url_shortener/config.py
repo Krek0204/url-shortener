@@ -6,7 +6,10 @@ class Settings(BaseSettings):
         extra='allow',
         )
     
-    database_url: str
+    postgres_user: str
+    postgres_password: str
+    postgres_db: str
+    postgres_host: str
     public_base_url: str
     
 settings = Settings()
