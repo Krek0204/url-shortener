@@ -35,7 +35,7 @@ app.add_exception_handler(CustomCodeAlreadyTakenError, custom_code_already_taken
 
 
 def run() -> None:
-    uvicorn.run('url_shortener.main:app', host='0.0.0.0', port=8000, reload=True)
+    uvicorn.run('url_shortener.main:app', host='0.0.0.0', port=8000)
     
 if __name__ == '__main__':
     run()
