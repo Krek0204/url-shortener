@@ -16,7 +16,3 @@ def get_session():
         except Exception:
             session.rollback()
             raise
-        
-def setup_db() -> None:
-    with engine.begin() as conn:
-        Base.metadata.create_all(conn)

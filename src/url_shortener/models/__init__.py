@@ -1,3 +1,3 @@
-from url_shortener.models.urls import UrlORM
+from url_shortener.models.urls import UrlORM, AliasORM
 
-__all__ = ["UrlORM"]
+__all__ = ["UrlORM", "AliasORM"]

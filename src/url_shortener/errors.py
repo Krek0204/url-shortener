@@ -6,23 +6,35 @@ from url_shortener.exceptions import LinkNotFoundError, CodeAlreadyTakenError, C
 def link_not_found_error_handler(request: Request, exc: LinkNotFoundError) -> JSONResponse:
     return JSONResponse(
         status_code=404,
-        content={"message": f"Oops! {exc.name} did something..."}
+        content={"message": "Not found",
+                 "detail": "No link found for the given short code.",
+                 "code": exc.code
+                 }
     )
     
 def code_already_taken_error_handler(request: Request, exc: CodeAlreadyTakenError) -> JSONResponse:
     return JSONResponse(
         status_code=409,
-        content={"message": f"Conflict! Error {exc.name} arrives! Code already taken..."}
+        content={"message": "Conflict",
+                 "detail": "This short code is already in use.",
+                 "code": exc.code
+                 }
     )
     
 def custom_code_already_taken_error_handler(request: Request, exc: CustomCodeAlreadyTakenError) -> JSONResponse:
     return JSONResponse(
         status_code=409,
-        content={"message": f"Conflict! Error {exc.name} arrives! Code already taken..."}
+        content={"message": "Conflict",
+                 "detail": "This custom short code is already in use.",
+                 "code": exc.code
+                 }
     )
     
 def code_not_found_error(request: Request, exc: CodeNotFoundError) -> JSONResponse:
     return JSONResponse(
         status_code=500,
-        content={"message": f"Code not found! Error {exc.name} occurs..."}
+        content={"message": "Internal error",
+                 "detail": "Expected short code was not found after create.",
+                 "code": exc.code
+                 }
     )

@@ -22,4 +22,4 @@ def make_short_url_by_wanted_code(data: SAddCustomShortUrl, link_service: LinkSe
 @router.get('/{code}')
 def get_short_url(code: str, link_service: LinkServiceDep):
     long_url = link_service.get_long_url(code)
-    return RedirectResponse(url=long_url, status_code=301)
+    return RedirectResponse(url=long_url, status_code=302)
