@@ -4,7 +4,7 @@ services:
     container_name: url-shortener-db
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U shortener -d url_shortener -p 5432"]
-      interval: 5s
+      interval: 10s
       timeout: 5s
       retries: 5
     environment:
@@ -29,7 +29,7 @@ services:
       - "POSTGRES_PASSWORD=shortener"
       - "POSTGRES_DB=url_shortener"
       - "POSTGRES_HOST=url-shortener-db:5432"
-      - "PUBLIC_BASE_URL=http://0.0.0.0:8000"
+      - "PUBLIC_BASE_URL=${PUBLIC_BASE_URL:-http://localhost:8000}"
 
     depends_on:
       db:
