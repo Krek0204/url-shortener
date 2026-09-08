@@ -1,0 +1,23 @@
+# Git
+.git
+.gitignore
+
+# Environment
+.env
+
+# AI
+.cursor
+
+# Development
+.pytest_cache/
+**/__pycache__/
+.venv
+.vscode/
+tests/
+Dockerfile
+docker-compose.yaml
+.dockerignore
+TODO.md
+
+# MacOS
+.DS_Store
