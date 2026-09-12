@@ -1,7 +1,8 @@
 from fastapi import Request
 from fastapi.responses import JSONResponse
 
-from url_shortener.exceptions import LinkNotFoundError, CodeAlreadyTakenError, CustomCodeAlreadyTakenError, CodeNotFoundError
+from url_shortener.exceptions import LinkNotFoundError, CodeAlreadyTakenError
+from url_shortener.exceptions import CustomCodeAlreadyTakenError, CodeNotFoundError
 
 def link_not_found_error_handler(request: Request, exc: LinkNotFoundError) -> JSONResponse:
     return JSONResponse(
@@ -11,16 +12,16 @@ def link_not_found_error_handler(request: Request, exc: LinkNotFoundError) -> JS
                  "code": exc.code
                  }
     )
-    
+
 def code_already_taken_error_handler(request: Request, exc: CodeAlreadyTakenError) -> JSONResponse:
     return JSONResponse(
-        status_code=409,
+        status_code=500,
         content={"message": "Conflict",
-                 "detail": "This short code is already in use.",
+                 "detail": "Automate generated code already in use. Internal Error.",
                  "code": exc.code
                  }
     )
-    
+
 def custom_code_already_taken_error_handler(request: Request, exc: CustomCodeAlreadyTakenError) -> JSONResponse:
     return JSONResponse(
         status_code=409,
@@ -29,7 +30,7 @@ def custom_code_already_taken_error_handler(request: Request, exc: CustomCodeAlr
                  "code": exc.code
                  }
     )
-    
+
 def code_not_found_error(request: Request, exc: CodeNotFoundError) -> JSONResponse:
     return JSONResponse(
         status_code=500,

@@ -9,7 +9,7 @@ from url_shortener.db.base import Base
 
 class UrlORM(Base):
     __tablename__ = 'urls'
-    
+
     id: Mapped[int] = mapped_column(primary_key=True)
     long_url: Mapped[str] = mapped_column(unique=True, nullable=False)
     clicks_count: Mapped[int] = mapped_column(default=0, nullable=False)
@@ -18,16 +18,16 @@ class UrlORM(Base):
         server_default=text('now()'),
         nullable=False,
     )
-    
+
     aliases: Mapped[List["AliasORM"]] = relationship(back_populates='url')
 
 class AliasORM(Base):
     __tablename__ = 'aliases'
-    
+
     id: Mapped[int] = mapped_column(primary_key=True)
     code: Mapped[str] = mapped_column(unique=True, nullable=False)
     long_url_id: Mapped[int] = mapped_column(ForeignKey("urls.id"), nullable=False)
     is_custom: Mapped[bool] = mapped_column(default=False, nullable=False)
-    
+
     url: Mapped["UrlORM"] = relationship(back_populates='aliases')
-     
+

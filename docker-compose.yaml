@@ -23,6 +23,18 @@ services:
 
     command: sh -c "uv run alembic upgrade head && uv run url-shortener"
 
+    healthcheck:
+      test: [
+        "CMD",
+        "python",
+        "-c",
+        "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/health')",
+      ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+
     ports:
       - "8000:8000"
 
@@ -30,7 +42,8 @@ services:
       - "POSTGRES_USER=shortener"
       - "POSTGRES_PASSWORD=shortener"
       - "POSTGRES_DB=url_shortener"
-      - "POSTGRES_HOST=url-shortener-db:5432"
+      - "POSTGRES_HOST=url-shortener-db"
+      - "PORT=5432"
       - "PUBLIC_BASE_URL=${PUBLIC_BASE_URL:-http://localhost:8000}"
       - 'CORS_ORIGINS=["http://localhost:8000", "http://127.0.0.1:8000"]'
 

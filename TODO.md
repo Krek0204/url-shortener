@@ -24,62 +24,49 @@
 ### 1. Документация и запуск
 
 - [ ] README: что это, как поднять (`docker compose up`), env vars, примеры curl
-- [ ] Починить `PUBLIC_BASE_URL` и `.env.example` (`localhost`, не `0.0.0.0`)
-- [ ] Добавить `.dockerignore`
-- [ ] Секреты в compose брать из `.env`, не хардкодить пароли в yaml
-- [ ] В README описать, зачем Postgres проброшен на хост (или убрать проброс)
+- [x] Починить `PUBLIC_BASE_URL` и `.env.example` (`localhost`, не `0.0.0.0`)
+- [x] Добавить `.dockerignore`
+- [x] Секреты в compose брать из `.env`, не хардкодить пароли в yaml
+- [x] В README описать, зачем Postgres проброшен на хост (или убрать проброс)
 
 ### 2. Базовая гигиена API
 
-- [ ] Редирект `302` или `307` вместо `301` (`api/links.py`)
-- [ ] Нормальные JSON-ошибки (`detail` / `code` / `message`) — без шуток и имён классов (`errors.py`)
-- [ ] Простой `GET /health` (хотя бы «жив»)
-- [ ] CORS: origins из env, не `allow_origins=['*']`
+- [x] Редирект `302` или `307` вместо `301` (`api/links.py`)
+- [x] Нормальные JSON-ошибки (`detail` / `code` / `message`) — без шуток и имён классов (`errors.py`)
+- [x] Простой `GET /health` (хотя бы «жив»)
+- [x] CORS: origins из env, не `allow_origins=['*']`
 
 ### 3. Миграции
 
-- [ ] Подключить Alembic
-- [ ] Убрать `create_all` из lifespan (или оставить только для тестов)
+- [x] Подключить Alembic
+- [x] Убрать `create_all` из lifespan (или оставить только для тестов)
 - [ ] Зафиксировать в README: как накатывать миграции
 
 ### 4. Тесты и зависимости
 
 - [ ] Unit-тесты `LinkService`: создание, custom conflict, idempotency по `long_url`
 - [ ] 1–2 API-теста через `TestClient` (+ тестовая БД)
-- [ ] Вынести `pytest` из runtime-зависимостей в dev / dependency-groups
-- [ ] Решить по Redis: либо простой кэш `code → long_url`, либо убрать зависимость
+- [x] Вынести `pytest` из runtime-зависимостей в dev / dependency-groups
+- [x] Решить по Redis: либо простой кэш `code → long_url`, либо убрать зависимость
 
 ### 5. Мелкий рефакторинг
 
-- [ ] snake_case: `has_url_auto_code`, `get_url_auto_code`, …
-- [ ] Убрать мёртвый `get_id_by_code` (если не нужен)
-- [ ] URL-encode пароля в DSN; `pool_pre_ping=True`
-- [ ] Settings: `extra='forbid'` (или не `allow`)
+- [x] snake_case: `has_url_auto_code`, `get_url_auto_code`, …
+- [x] Убрать мёртвый `get_id_by_code` (если не нужен)
+- [x] URL-encode пароля в DSN; `pool_pre_ping=True`
+- [x] Settings: `extra='forbid'` (или не `allow`)
 - [ ] Поправить обработку коллизии auto-code и `CodeNotFoundError` → не отдавать странный 500 клиенту как «норму»
 
 ### 6. Лёгкий CI и качество
 
-- [ ] ruff (и при желании минимальный mypy)
+- [x] ruff (и при желании минимальный mypy)
 - [ ] GitHub Action: lint + pytest
-- [ ] Убрать/заменить комментарий `# pylint` без настроенного линтера
+- [x] Убрать/заменить комментарий `# pylint` без настроенного линтера
 
 ### 7. Compose для демо (без prod-оверинжиниринга)
 
 - [ ] env из `.env`
-- [ ] Опционально: healthcheck у app
-- [ ] Не раздувать в multi-stage / non-root / Helm — этого для пет достаточно не делать
-
----
-
-## Порядок работ (ориентир)
-
-1. README + env/compose + `.dockerignore`
-2. Ошибки + `302/307` + `/health` + CORS из env
-3. Alembic
-4. Тесты LinkService + API; pytest → dev
-5. ruff + CI
-6. Redis: кэш или удалить зависимость
-7. (Опционально) простой rate limit на `POST /shorten`
+- [x] Опционально: healthcheck у app
 
 ---
 

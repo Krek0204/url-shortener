@@ -5,12 +5,13 @@ class Settings(BaseSettings):
         env_file='.env',
         extra='ignore',
         )
-    
+
     postgres_user: str
     postgres_password: str
     postgres_db: str
     postgres_host: str
+    port: int
     public_base_url: str
     cors_origins: list[str]
-    
+
 settings = Settings()

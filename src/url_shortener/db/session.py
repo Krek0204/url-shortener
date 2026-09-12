@@ -1,10 +1,18 @@
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, URL
 from sqlalchemy.orm import sessionmaker
 
 from url_shortener.config import settings
 from url_shortener.db.base import Base
 
-engine = create_engine(f"postgresql+psycopg://{settings.postgres_user}:{settings.postgres_password}@{settings.postgres_host}/{settings.postgres_db}")
+database_url = URL.create(
+    "postgresql+psycopg",
+    username=settings.postgres_user,
+    password=settings.postgres_password,
+    host=settings.postgres_host,
+    database=settings.postgres_db,
+    port=settings.port,
+)
+engine = create_engine(database_url, pool_pre_ping=True)
 
 session_fabric = sessionmaker(engine, expire_on_commit=False)
 
