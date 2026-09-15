@@ -1,3 +1,7 @@
+"""
+This module contains link service, that used to handle main application logic.
+It creates short code, custom short code, gets long url.
+"""
 from sqlalchemy.exc import IntegrityError
 
 from url_shortener.services.shortener import ShortenerService
@@ -6,12 +10,14 @@ from url_shortener.exceptions import LinkNotFoundError, CodeAlreadyTakenError, C
 from url_shortener.models.urls import AliasORM
 
 class LinkService:
+    """Link Service class, that handles main application logic."""
 
     def __init__(self, repository: UrlRepository, shortener: ShortenerService):
         self.repository = repository
         self.shortener = shortener
  
     def get_long_url(self, code: str) -> str:
+        """Getting long url by short code."""
         urlORM = self.repository.get_by_code(code)
         if urlORM is None:
             raise LinkNotFoundError(code)
@@ -20,6 +26,7 @@ class LinkService:
             return urlORM.long_url
 
     def create_short_code(self, long_url: str) -> str:
+        """Creating short code for long_url automatically."""
         # Check if long_url already in base
         founded_url = self.repository.get_by_long_url(long_url)
         if founded_url is not None:
@@ -56,6 +63,7 @@ class LinkService:
             return self.get_url_auto_code(existing.aliases)
 
     def create_custom_shorturl(self, long_url: str, custom_code: str) -> str:
+        """Creating custom short code for long url (alias)."""
         founded_custom_url = self.repository.get_by_code(custom_code)
         if founded_custom_url is not None:
             if founded_custom_url.long_url == long_url:
@@ -86,18 +94,21 @@ class LinkService:
                 return self.get_url_custom_code(existing.aliases, custom_code=custom_code)
 
     def has_url_auto_code(self, aliases: list[AliasORM]) -> bool:
+        """Checking, if one of url aliases is automatically generated code"""
         for alias in aliases:
             if alias.is_custom is False:
                 return True
         return False
 
     def get_url_auto_code(self, aliases: list[AliasORM]) -> str:
+        """Get automatically generated code from aliases list"""
         for alias in aliases:
             if alias.is_custom is False:
                 return alias.code
         raise CodeNotFoundError("autocode")
 
     def get_url_custom_code(self, aliases: list[AliasORM], custom_code: str) -> str:
+        """Get custom code from aliases by specifing it name."""
         for alias in aliases:
             if alias.code == custom_code:
                 return custom_code

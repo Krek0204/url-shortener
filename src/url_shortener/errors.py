@@ -1,3 +1,7 @@
+"""
+Module specified handlers, that uses to catch application exceptions
+"""
+
 from fastapi import Request
 from fastapi.responses import JSONResponse
 
@@ -5,6 +9,7 @@ from url_shortener.exceptions import LinkNotFoundError, CodeAlreadyTakenError
 from url_shortener.exceptions import CustomCodeAlreadyTakenError, CodeNotFoundError
 
 def link_not_found_error_handler(request: Request, exc: LinkNotFoundError) -> JSONResponse:
+    """Handler for LinkNotFoundError exc. Returns 404 code"""
     return JSONResponse(
         status_code=404,
         content={"message": "Not found",
@@ -14,6 +19,7 @@ def link_not_found_error_handler(request: Request, exc: LinkNotFoundError) -> JS
     )
 
 def code_already_taken_error_handler(request: Request, exc: CodeAlreadyTakenError) -> JSONResponse:
+    """Handler for CodeAlreadyTaken exc. Returns 500 code"""
     return JSONResponse(
         status_code=500,
         content={"message": "Conflict",
@@ -23,6 +29,8 @@ def code_already_taken_error_handler(request: Request, exc: CodeAlreadyTakenErro
     )
 
 def custom_code_already_taken_error_handler(request: Request, exc: CustomCodeAlreadyTakenError) -> JSONResponse:
+    """Handler for CustomCodeAlreadyTaken exc. Returns 409 code"""
+
     return JSONResponse(
         status_code=409,
         content={"message": "Conflict",
@@ -32,6 +40,8 @@ def custom_code_already_taken_error_handler(request: Request, exc: CustomCodeAlr
     )
 
 def code_not_found_error(request: Request, exc: CodeNotFoundError) -> JSONResponse:
+    """Handler for CodeNotFoundError exc. Returns 500 code"""
+
     return JSONResponse(
         status_code=500,
         content={"message": "Internal error",

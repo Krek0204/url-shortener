@@ -1,3 +1,7 @@
+"""
+Module that contains database models for urls.
+"""
+
 from datetime import datetime
 from typing import List
 
@@ -8,6 +12,10 @@ from url_shortener.db.base import Base
 
 
 class UrlORM(Base):
+    """
+    Class that desciribes UrlORM model, that
+    contains long url, clicks count, created date and aliases list.
+    """
     __tablename__ = 'urls'
 
     id: Mapped[int] = mapped_column(primary_key=True)
@@ -22,6 +30,11 @@ class UrlORM(Base):
     aliases: Mapped[List["AliasORM"]] = relationship(back_populates='url')
 
 class AliasORM(Base):
+    """
+    Class that describes aliases model that contains code, long_url id
+    and is_custom bool flag.
+    """
+    
     __tablename__ = 'aliases'
 
     id: Mapped[int] = mapped_column(primary_key=True)

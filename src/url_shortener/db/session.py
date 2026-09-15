@@ -1,3 +1,4 @@
+"""Session module that specifing create session function and creates engine for database."""
 from sqlalchemy import create_engine, URL
 from sqlalchemy.orm import sessionmaker
 
@@ -17,6 +18,8 @@ engine = create_engine(database_url, pool_pre_ping=True)
 session_fabric = sessionmaker(engine, expire_on_commit=False)
 
 def get_session():
+    """Creates session for database."""
+    
     with session_fabric() as session:
         try:
             yield session

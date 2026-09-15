@@ -1,3 +1,4 @@
+"""Main module for starting fastapi application"""
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 import uvicorn
@@ -21,6 +22,7 @@ app = FastAPI(exception_handlers=exceptions_dict)
 
 @app.get('/health', status_code=200)
 def health_check():
+    """API endpoint for checking application status."""
     return {"status": "ok"}
 
 app.include_router(main_router)
@@ -32,6 +34,7 @@ app.add_middleware(
 )
 
 def run() -> None:
+    """Start fastapi application with uvicorn"""
     uvicorn.run('url_shortener.main:app', host='0.0.0.0', port=8000)
 
 if __name__ == '__main__':

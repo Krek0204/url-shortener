@@ -1,3 +1,4 @@
+"""Init module for api package. Creates router for application."""
 from fastapi import APIRouter
 
 from url_shortener.api.links import router as links_router
