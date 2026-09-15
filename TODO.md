@@ -23,7 +23,7 @@
 
 ### 1. Документация и запуск
 
-- [ ] README: что это, как поднять (`docker compose up`), env vars, примеры curl
+- [x] README: что это, как поднять (`docker compose up`), env vars, примеры curl
 - [x] Починить `PUBLIC_BASE_URL` и `.env.example` (`localhost`, не `0.0.0.0`)
 - [x] Добавить `.dockerignore`
 - [x] Секреты в compose брать из `.env`, не хардкодить пароли в yaml
@@ -40,7 +40,7 @@
 
 - [x] Подключить Alembic
 - [x] Убрать `create_all` из lifespan (или оставить только для тестов)
-- [ ] Зафиксировать в README: как накатывать миграции
+- [x] Зафиксировать в README: как накатывать миграции
 
 ### 4. Тесты и зависимости
 
