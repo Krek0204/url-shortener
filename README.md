@@ -6,10 +6,11 @@
 
 ### Возможности
 
-- Создание короткой ссылки из long URL (`POST /shorten`); auto code — base62 от id записи
+- Создание короткой ссылки из long URL (`POST /shorten`); auto code — base62 кодирование по id записи в бд
 - Создание custom short code (`POST /shorten/custom`) с валидацией через Pydantic
 - Идемпотентное повторное использование существующего auto code для того же `long_url`
-- Redirect по code с HTTP `302` (`GET /{code}`), инкремент счётчика кликов
+- Повторный `POST /shorten/custom` с тем же `custom_code` и тем же `long_url` возвращает существующий код (у одного URL может быть несколько custom aliases)
+- Redirect по code с HTTP `302` (`GET /{code}`); счётчик кликов увеличивается в БД (отдельного stats endpoint нет)
 - Health endpoint (`GET /health`)
 - JSON-тело ошибок с полями `message`, `detail` и `code`
 - Миграции схемы через Alembic (накатываются при старте app в Compose)
@@ -44,8 +45,12 @@ src/url_shortener/
   exceptions.py  # domain errors
   main.py        # FastAPI app entry
 alembic/         # migrations
+alembic.ini
 tests/           # pytest
+Dockerfile
 docker-compose.yaml
+pyproject.toml
+uv.lock
 .env.example
 ```
 
@@ -64,7 +69,7 @@ cd url-shortener
 cp .env.example .env
 ```
 
-При необходимости отредактируйте `.env` (как минимум `PUBLIC_BASE_URL` и секреты для локальной БД). Compose по-прежнему задаёт credentials БД и `POSTGRES_HOST=url-shortener-db` для сервиса `app`.
+При необходимости отредактируйте `.env` (как минимум `PUBLIC_BASE_URL` и секреты для локальной БД). Compose подставляет credentials из `.env` и задаёт `POSTGRES_HOST=url-shortener-db` для сервиса `app`.
 
 #### 2. Запуск
 
@@ -93,12 +98,12 @@ curl http://localhost:8000/health
 | Variable | Description | Example |
 |----------|-------------|---------|
 | `POSTGRES_USER` | Пользователь PostgreSQL | `shortener` |
-| `POSTGRES_PASSWORD` | Пароль PostgreSQL | `changeme` |
+| `POSTGRES_PASSWORD` | Пароль PostgreSQL | `shortener` |
 | `POSTGRES_DB` | Имя базы | `url_shortener` |
-| `POSTGRES_HOST` | Хост БД (`localhost` на host; имя Compose-сервиса внутри Docker) | `localhost` |
+| `POSTGRES_HOST` | Хост БД (`localhost` на host; для app в Compose — `url-shortener-db`) | `localhost` |
 | `PORT` | Порт PostgreSQL | `5432` |
 | `PUBLIC_BASE_URL` | Base URL, встраиваемый в созданные short links | `http://localhost:8000` |
-| `CORS_ORIGINS` | JSON-список разрешённых CORS origins | `["http://localhost:8000"]` |
+| `CORS_ORIGINS` | JSON-список разрешённых CORS origins | `["http://localhost:8000", "http://127.0.0.1:8000"]` |
 
 ### Миграции
 
@@ -128,7 +133,7 @@ Base URL по умолчанию: `http://localhost:8000`.
 |--------|------|-------------|
 | `GET` | `/health` | Liveness: `{"status": "ok"}` |
 | `POST` | `/shorten` | Создать (или переиспользовать) auto short URL → `201` + `{ "short_url": "..." }` |
-| `POST` | `/shorten/custom` | Создать (или переиспользовать для того же URL) custom code → `201` + `{ "short_url": "..." }` |
+| `POST` | `/shorten/custom` | Создать custom code (или вернуть его, если тот же code уже привязан к этому URL) → `201` + `{ "short_url": "..." }` |
 | `GET` | `/{code}` | Redirect на long URL (`302`) |
 
 Request bodies:
@@ -218,7 +223,8 @@ Simple URL shortener API: create auto or custom short codes and redirect to the 
 - Create a short link from a long URL (`POST /shorten`); auto code is base62 of the row id
 - Create a custom short code (`POST /shorten/custom`), validated by Pydantic
 - Idempotent reuse of an existing auto code for the same `long_url`
-- Redirect by code with HTTP `302` (`GET /{code}`), click counter increment
+- Repeating `POST /shorten/custom` with the same `custom_code` and the same `long_url` returns the existing code (one URL may have multiple custom aliases)
+- Redirect by code with HTTP `302` (`GET /{code}`); click counter is incremented in the DB (no separate stats endpoint)
 - Health endpoint (`GET /health`)
 - JSON error body with `message`, `detail`, and `code`
 - Schema migrations via Alembic (applied on Compose app start)
@@ -253,8 +259,12 @@ src/url_shortener/
   exceptions.py  # domain errors
   main.py        # FastAPI app entry
 alembic/         # migrations
+alembic.ini
 tests/           # pytest
+Dockerfile
 docker-compose.yaml
+pyproject.toml
+uv.lock
 .env.example
 ```
 
@@ -273,7 +283,7 @@ cd url-shortener
 cp .env.example .env
 ```
 
-Edit `.env` if needed (at least `PUBLIC_BASE_URL` and secrets for local DB use). Compose still sets DB credentials and `POSTGRES_HOST=url-shortener-db` for the `app` service.
+Edit `.env` if needed (at least `PUBLIC_BASE_URL` and secrets for local DB use). Compose interpolates DB credentials from `.env` and sets `POSTGRES_HOST=url-shortener-db` for the `app` service.
 
 #### 2. Run
 
@@ -302,12 +312,12 @@ Loaded from the environment and optionally from `.env` (see `.env.example`).
 | Variable | Description | Example |
 |----------|-------------|---------|
 | `POSTGRES_USER` | PostgreSQL user | `shortener` |
-| `POSTGRES_PASSWORD` | PostgreSQL password | `changeme` |
+| `POSTGRES_PASSWORD` | PostgreSQL password | `shortener` |
 | `POSTGRES_DB` | Database name | `url_shortener` |
-| `POSTGRES_HOST` | DB host (`localhost` on host; Compose service name inside Docker) | `localhost` |
-| `PORT` | PostgreSQL port | `5432` |
+| `POSTGRES_HOST` | DB host (`localhost` on host; for the Compose `app` service — `url-shortener-db`) | `localhost` |
+| `PORT` | PostgreSQL port (not the API port; the API listens on `8000`) | `5432` |
 | `PUBLIC_BASE_URL` | Base URL embedded in created short links | `http://localhost:8000` |
-| `CORS_ORIGINS` | JSON list of allowed CORS origins | `["http://localhost:8000"]` |
+| `CORS_ORIGINS` | JSON list of allowed CORS origins | `["http://localhost:8000", "http://127.0.0.1:8000"]` |
 
 ### Migrations
 
@@ -337,7 +347,7 @@ Default base URL: `http://localhost:8000`.
 |--------|------|-------------|
 | `GET` | `/health` | Liveness: `{"status": "ok"}` |
 | `POST` | `/shorten` | Create (or reuse) auto short URL → `201` + `{ "short_url": "..." }` |
-| `POST` | `/shorten/custom` | Create (or reuse same URL) custom code → `201` + `{ "short_url": "..." }` |
+| `POST` | `/shorten/custom` | Create a custom code (or return it if that code is already bound to this URL) → `201` + `{ "short_url": "..." }` |
 | `GET` | `/{code}` | Redirect to long URL (`302`) |
 
 Request bodies:
