@@ -1,15 +1,22 @@
 """Main module for starting fastapi application"""
+import uvicorn
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-import uvicorn
 
-import url_shortener.models
 from url_shortener.api import main_router
-from url_shortener.errors import link_not_found_error_handler, code_already_taken_error_handler
-from url_shortener.errors import custom_code_already_taken_error_handler, code_not_found_error
-from url_shortener.exceptions import LinkNotFoundError, CodeNotFoundError
-from url_shortener.exceptions import CodeAlreadyTakenError, CustomCodeAlreadyTakenError
 from url_shortener.config import settings
+from url_shortener.errors import (
+    code_already_taken_error_handler,
+    code_not_found_error,
+    custom_code_already_taken_error_handler,
+    link_not_found_error_handler,
+)
+from url_shortener.exceptions import (
+    CodeAlreadyTakenError,
+    CodeNotFoundError,
+    CustomCodeAlreadyTakenError,
+    LinkNotFoundError,
+)
 
 exceptions_dict = {
     LinkNotFoundError: link_not_found_error_handler,

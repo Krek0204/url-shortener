@@ -5,9 +5,9 @@ from fastapi import Depends
 from sqlalchemy.orm import Session
 
 from url_shortener.db.session import get_session
-from url_shortener.services.shortener import ShortenerService
-from url_shortener.services.link import LinkService
 from url_shortener.repositories.urls import UrlRepository
+from url_shortener.services.link import LinkService
+from url_shortener.services.shortener import ShortenerService
 
 SessionDep = Annotated[Session, Depends(get_session)]
 

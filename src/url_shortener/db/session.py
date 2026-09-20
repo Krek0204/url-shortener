@@ -1,9 +1,8 @@
 """Session module that specifing create session function and creates engine for database."""
-from sqlalchemy import create_engine, URL
+from sqlalchemy import URL, create_engine
 from sqlalchemy.orm import sessionmaker
 
 from url_shortener.config import settings
-from url_shortener.db.base import Base
 
 database_url = URL.create(
     "postgresql+psycopg",

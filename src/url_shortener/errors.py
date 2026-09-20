@@ -5,8 +5,13 @@ Module specified handlers, that uses to catch application exceptions
 from fastapi import Request
 from fastapi.responses import JSONResponse
 
-from url_shortener.exceptions import LinkNotFoundError, CodeAlreadyTakenError
-from url_shortener.exceptions import CustomCodeAlreadyTakenError, CodeNotFoundError
+from url_shortener.exceptions import (
+    CodeAlreadyTakenError,
+    CodeNotFoundError,
+    CustomCodeAlreadyTakenError,
+    LinkNotFoundError,
+)
+
 
 def link_not_found_error_handler(request: Request, exc: LinkNotFoundError) -> JSONResponse:
     """Handler for LinkNotFoundError exc. Returns 404 code"""

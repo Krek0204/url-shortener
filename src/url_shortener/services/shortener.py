@@ -2,6 +2,7 @@
 
 import base62
 
+
 class ShortenerService:
     """Service class to generate code"""
     def __init__(self):

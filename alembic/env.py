@@ -1,12 +1,9 @@
 from logging.config import fileConfig
 
-from sqlalchemy import create_engine
-from sqlalchemy import pool, URL
+from sqlalchemy import URL, create_engine, pool
 
 from alembic import context
-
 from url_shortener.config import settings
-import url_shortener.models #pylint: disable=unused-import
 from url_shortener.db.base import Base
 
 # this is the Alembic Config object, which provides

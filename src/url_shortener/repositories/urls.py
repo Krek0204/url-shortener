@@ -2,7 +2,8 @@
 from sqlalchemy import select, update
 from sqlalchemy.orm import Session
 
-from url_shortener.models.urls import UrlORM, AliasORM
+from url_shortener.models.urls import AliasORM, UrlORM
+
 
 class UrlRepository:
     """Url repository class."""

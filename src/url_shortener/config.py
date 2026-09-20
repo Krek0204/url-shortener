@@ -6,6 +6,7 @@ Settings specified with .env file or Environments vars.
 
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
+
 class Settings(BaseSettings):
     """Class for specifing settings. Used pydantic_settings."""
     model_config = SettingsConfigDict(

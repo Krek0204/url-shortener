@@ -4,10 +4,16 @@ It creates short code, custom short code, gets long url.
 """
 from sqlalchemy.exc import IntegrityError
 
-from url_shortener.services.shortener import ShortenerService
-from url_shortener.repositories.urls import UrlRepository
-from url_shortener.exceptions import LinkNotFoundError, CodeAlreadyTakenError, CustomCodeAlreadyTakenError, CodeNotFoundError
+from url_shortener.exceptions import (
+    CodeAlreadyTakenError,
+    CodeNotFoundError,
+    CustomCodeAlreadyTakenError,
+    LinkNotFoundError,
+)
 from url_shortener.models.urls import AliasORM
+from url_shortener.repositories.urls import UrlRepository
+from url_shortener.services.shortener import ShortenerService
+
 
 class LinkService:
     """Link Service class, that handles main application logic."""

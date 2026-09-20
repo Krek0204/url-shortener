@@ -1,5 +1,6 @@
 """Module that specifies urls pydantic schemas."""
-from pydantic import BaseModel, HttpUrl, Field
+from pydantic import BaseModel, Field, HttpUrl
+
 
 class SAddLongUrl(BaseModel):
     """Pydantic schema for adding long url."""

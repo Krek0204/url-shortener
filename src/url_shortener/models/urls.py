@@ -3,10 +3,9 @@ Module that contains database models for urls.
 """
 
 from datetime import datetime
-from typing import List
 
-from sqlalchemy import DateTime, text, ForeignKey
-from sqlalchemy.orm import mapped_column, Mapped, relationship
+from sqlalchemy import DateTime, ForeignKey, text
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from url_shortener.db.base import Base
 
@@ -27,7 +26,7 @@ class UrlORM(Base):
         nullable=False,
     )
 
-    aliases: Mapped[List["AliasORM"]] = relationship(back_populates='url')
+    aliases: Mapped[list["AliasORM"]] = relationship(back_populates='url')
 
 class AliasORM(Base):
     """

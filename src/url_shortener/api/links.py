@@ -2,9 +2,13 @@
 from fastapi import APIRouter
 from fastapi.responses import RedirectResponse
 
-from url_shortener.config import settings
-from url_shortener.schemas.urls import SAddLongUrl, SAddCustomShortUrl, SShortUrlResponse
 from url_shortener.api.dependencies import LinkServiceDep
+from url_shortener.config import settings
+from url_shortener.schemas.urls import (
+    SAddCustomShortUrl,
+    SAddLongUrl,
+    SShortUrlResponse,
+)
 
 router = APIRouter()
 
